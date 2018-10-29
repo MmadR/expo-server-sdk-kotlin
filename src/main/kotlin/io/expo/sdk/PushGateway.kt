@@ -65,31 +65,26 @@ class PushGateway(
                         successCallback: (InputStream) -> Response?,
                         errorCallback: (InputStream) -> ErrorResponse?
     ): Response {
-        try {
-            val connection = URL(endpoint).openConnection() as HttpURLConnection
-            connection.addRequestProperty("Accept", "application/json")
-            connection.addRequestProperty("Accept-Encoding", "gzip, deflate")
-            connection.addRequestProperty("Content-Type", "application/json")
-            connection.requestMethod = "POST"
-            connection.doOutput = true
-            connection.outputStream.write(payload.toByteArray())
-            connection.connect()
+        val connection = URL(endpoint).openConnection() as HttpURLConnection
+        connection.addRequestProperty("Accept", "application/json")
+        connection.addRequestProperty("Accept-Encoding", "gzip, deflate")
+        connection.addRequestProperty("Content-Type", "application/json")
+        connection.requestMethod = "POST"
+        connection.doOutput = true
+        connection.outputStream.write(payload.toByteArray())
+        connection.connect()
 
-            return when(connection.responseCode ){
-                200 -> successCallback.invoke(connection.inputStream)
-                else -> {
-                    (connection.errorStream?:connection.inputStream)?.let{inputStream ->
-                        when(connection.responseCode){
-                            in 400..599 -> errorCallback.invoke(inputStream)
-                            else -> ErrorResponse(arrayListOf(ErrorResponseItem("UNKNOWN", inputStream.use { it.reader().use { reader -> reader.readText() } })))
-                        }
+        return when(connection.responseCode ){
+            200 -> successCallback.invoke(connection.inputStream)
+            else -> {
+                (connection.errorStream?:connection.inputStream)?.let{inputStream ->
+                    when(connection.responseCode){
+                        in 400..599 -> errorCallback.invoke(inputStream)
+                        else -> ErrorResponse(arrayListOf(ErrorResponseItem("UNKNOWN", inputStream.use { it.reader().use { reader -> reader.readText() } })))
                     }
                 }
-            }?: ErrorResponse(arrayListOf(ErrorResponseItem("PARSE_RESPONSE_ERROR", "Could not parse response")))
-        }
-        catch (ex: Exception){
-            throw PushException(message =  "Error sending push notification",  cause = ex)
-        }
+            }
+        }?: ErrorResponse(arrayListOf(ErrorResponseItem("RESPONSE_ERROR", connection.responseMessage?:"Could not process response")))
     }
 }
 

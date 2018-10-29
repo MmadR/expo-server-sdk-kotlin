@@ -180,7 +180,7 @@ internal class PushGatewayTest {
                                 .withBody("Force parse error")
                 )
 
-        assertThrows(PushException::class.java) {
+        assertThrows(Exception::class.java) {
             PushGateway(expoReceiptsEndpointUrl = "$url/receipts")
                     .receipts(listOf("id1", "id2"))
         }
