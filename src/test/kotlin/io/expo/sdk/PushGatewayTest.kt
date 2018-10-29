@@ -33,7 +33,7 @@ internal class PushGatewayTest {
 
         PushGateway(expoPushEndpointUrl = "$url/push")
                 .push(
-                        pushMessage = AndroidPushMessage(
+                        pushMessages = arrayListOf(AndroidPushMessage(
                                 to = "expo-client-token",
                                 data = Pair("test", "test-data"),
                                 title =  "test-title",
@@ -42,7 +42,7 @@ internal class PushGatewayTest {
                                 expiration =  1000000,
                                 priority = Priority.HIGH,
                                 channelId = "test-channel"
-                        ),
+                        )),
                         onSuccess = assertPushResponse()
                 )
     }
@@ -54,7 +54,7 @@ internal class PushGatewayTest {
 
         PushGateway(expoPushEndpointUrl = "$url/push")
                 .push(
-                        pushMessage = IOSPushMessage(
+                        pushMessages = arrayListOf(IOSPushMessage(
                                 to = "expo-client-token",
                                 data = Pair("test", "test-data"),
                                 title =  "test-title",
@@ -64,7 +64,7 @@ internal class PushGatewayTest {
                                 priority = Priority.HIGH,
                                 badge = 10,
                                 sound = "boing"
-                        ),
+                        )),
                         onSuccess = assertPushResponse()
                 )
     }
@@ -76,7 +76,7 @@ internal class PushGatewayTest {
 
         PushGateway(expoPushEndpointUrl = "$url/push")
                 .push(
-                        pushMessage = IOSPushMessage(
+                        pushMessages = arrayListOf(IOSPushMessage(
                                 to = "expo-client-token",
                                 data = Pair("test", "test-data"),
                                 title =  "test-title",
@@ -86,7 +86,7 @@ internal class PushGatewayTest {
                                 priority = Priority.HIGH,
                                 badge = 10,
                                 sound = "boing"
-                        ),
+                        )),
                         onError = assert400Error()
                 )
     }
@@ -100,7 +100,7 @@ internal class PushGatewayTest {
 
         PushGateway(expoPushEndpointUrl = "$url/push")
                 .push(
-                        pushMessage = IOSPushMessage(
+                        pushMessages = arrayListOf(IOSPushMessage(
                                 to = "expo-client-token",
                                 data = Pair("test", "test-data"),
                                 title =  "test-title",
@@ -110,7 +110,7 @@ internal class PushGatewayTest {
                                 priority = Priority.HIGH,
                                 badge = 10,
                                 sound = "boing"
-                        ),
+                        )),
                         onError = assert500error()
                 )
     }

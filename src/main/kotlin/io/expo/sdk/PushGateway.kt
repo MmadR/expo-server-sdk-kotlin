@@ -16,11 +16,11 @@ class PushGateway(
         private val jsonSerializer: KlaxonJsonSerializer = KlaxonJsonSerializer()
     }
 
-    fun push(pushMessage: PushMessage,
+    fun push(pushMessages: Collection<PushMessage>,
              onSuccess: (PushResponse) -> Unit = {},
              onError: (ErrorResponse) -> Unit = {}) {
         request(expoPushEndpointUrl,
-                jsonSerializer.toJson(pushMessage),
+                jsonSerializer.toJson(pushMessages),
                 {input -> jsonSerializer.fromJson<PushResponse>(input)},
                 {input -> jsonSerializer.fromJson<ErrorResponse>(input)}
         ).let{
@@ -35,7 +35,7 @@ class PushGateway(
                  onSuccess: (ReceiptResponse) -> Unit = {},
                  onError: (ErrorResponse) -> Unit = {}) {
         request(expoReceiptsEndpointUrl,
-                jsonSerializer.toJson(Pair("ids", ids)),
+                jsonSerializer.toJson(mapOf(Pair("ids", ids))),
                 {input -> jsonSerializer.fromJson<ReceiptResponse>(input)},
                 {input -> jsonSerializer.fromJson<ErrorResponse>(input)}
         ).let{

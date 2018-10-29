@@ -33,7 +33,7 @@ class ErrorDetailConverter: Converter{
             ErrorDetail.values().find { it.code == jv.inside}?:ErrorDetail.UNKNOWN
 
     override fun toJson(value: Any): String =
-            (value as ErrorDetail).code
+            "\"${(value as ErrorDetail).code}\""
 }
 
 class ResponseStatusConverter: Converter{
@@ -44,7 +44,7 @@ class ResponseStatusConverter: Converter{
             if(ResponseStatus.OK.status == jv.inside)ResponseStatus.OK else ResponseStatus.ERROR
 
     override fun toJson(value: Any): String =
-            (value as ResponseStatus).status
+            "\"${(value as ResponseStatus).status}\""
 }
 
 class PriorityConverter: Converter{
@@ -55,5 +55,5 @@ class PriorityConverter: Converter{
             Priority.values().find { it.value == jv.inside}?:Priority.DEFAULT
 
     override fun toJson(value: Any): String =
-            (value as Priority).value
+            "\"${(value as Priority).value}\""
 }
