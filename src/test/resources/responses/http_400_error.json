@@ -1,0 +1,6 @@
+{
+  "errors": [{
+    "code": "NOT_FOUND",
+    "message": "Not found."
+  }]
+}
