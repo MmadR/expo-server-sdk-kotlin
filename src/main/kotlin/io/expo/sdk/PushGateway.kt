@@ -6,8 +6,8 @@ import java.net.HttpURLConnection
 import java.net.URL
 
 class PushGateway(
-        private val expoPushEndpointUrl: String = PushGateway.EXPO_PUSH_ENDPOINT,
-        private val expoReceiptsEndpointUrl: String = PushGateway.EXPO_RECEIPT_ENDPOINT
+        private val expoPushEndpointUrl: String = EXPO_PUSH_ENDPOINT,
+        private val expoReceiptsEndpointUrl: String = EXPO_RECEIPT_ENDPOINT
 )
 {
     companion object {
@@ -16,11 +16,11 @@ class PushGateway(
         private val jsonSerializer: KlaxonJsonSerializer = KlaxonJsonSerializer()
     }
 
-    fun push(pushMessages: Collection<PushMessage>,
+    fun push(pushMessage: PushMessage,
              onSuccess: (PushResponse) -> Unit = {},
              onError: (ErrorResponse) -> Unit = {}) {
         request(expoPushEndpointUrl,
-                jsonSerializer.toJson(pushMessages),
+                jsonSerializer.toJson(pushMessage),
                 {input -> jsonSerializer.fromJson<PushResponse>(input)},
                 {input -> jsonSerializer.fromJson<ErrorResponse>(input)}
         ).let{
@@ -35,7 +35,7 @@ class PushGateway(
                  onSuccess: (ReceiptResponse) -> Unit = {},
                  onError: (ErrorResponse) -> Unit = {}) {
         request(expoReceiptsEndpointUrl,
-                jsonSerializer.toJson(mapOf(Pair("ids", ids))),
+                jsonSerializer.toJson(Pair("ids", ids)),
                 {input -> jsonSerializer.fromJson<ReceiptResponse>(input)},
                 {input -> jsonSerializer.fromJson<ErrorResponse>(input)}
         ).let{
@@ -52,8 +52,7 @@ class PushGateway(
             receipts(
                     responseData.data
                             .filter { ResponseStatus.OK == it.status }
-                            .map{ it.id }
-                            .filterNotNull(),
+                            .mapNotNull(ResponseItem::id),
                     onSuccess,
                     onError
             )
@@ -65,26 +64,36 @@ class PushGateway(
                         successCallback: (InputStream) -> Response?,
                         errorCallback: (InputStream) -> ErrorResponse?
     ): Response {
-        val connection = URL(endpoint).openConnection() as HttpURLConnection
-        connection.addRequestProperty("Accept", "application/json")
-        connection.addRequestProperty("Accept-Encoding", "gzip, deflate")
-        connection.addRequestProperty("Content-Type", "application/json")
-        connection.requestMethod = "POST"
-        connection.doOutput = true
-        connection.outputStream.write(payload.toByteArray())
-        connection.connect()
+        try {
+            val connection = URL(endpoint).openConnection() as HttpURLConnection
+            connection.addRequestProperty("Accept", "application/json")
+            connection.addRequestProperty("Accept-Encoding", "gzip, deflate")
+            connection.addRequestProperty("Content-Type", "application/json")
+            connection.requestMethod = "POST"
+            connection.doOutput = true
+            connection.outputStream.write(payload.toByteArray())
+            connection.connect()
 
-        return when(connection.responseCode ){
-            200 -> successCallback.invoke(connection.inputStream)
-            else -> {
-                (connection.errorStream?:connection.inputStream)?.let{inputStream ->
-                    when(connection.responseCode){
-                        in 400..599 -> errorCallback.invoke(inputStream)
-                        else -> ErrorResponse(arrayListOf(ErrorResponseItem("UNKNOWN", inputStream.use { it.reader().use { reader -> reader.readText() } })))
+            return when(connection.responseCode ){
+                200 -> successCallback.invoke(connection.inputStream)
+                else -> {
+                    (connection.errorStream?:connection.inputStream)?.let{inputStream ->
+                        when(connection.responseCode){
+                            in 400..599 -> errorCallback.invoke(inputStream)
+                            else -> ErrorResponse(arrayListOf(ErrorResponseItem("UNKNOWN", inputStream.use { it.reader().use { reader -> reader.readText() } })))
+                        }
                     }
                 }
-            }
-        }?: ErrorResponse(arrayListOf(ErrorResponseItem("RESPONSE_ERROR", connection.responseMessage?:"Could not process response")))
+            }?: ErrorResponse(arrayListOf(ErrorResponseItem("PARSE_RESPONSE_ERROR", "Could not parse response")))
+        }
+        catch (ex: Exception){
+            throw PushException(
+                    endpoint = endpoint,
+                    payload = payload,
+                    message =  "Error sending push notification",
+                    cause = ex
+            )
+        }
     }
 }
 

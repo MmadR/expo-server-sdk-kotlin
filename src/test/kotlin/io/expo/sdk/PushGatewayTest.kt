@@ -33,7 +33,7 @@ internal class PushGatewayTest {
 
         PushGateway(expoPushEndpointUrl = "$url/push")
                 .push(
-                        pushMessages = arrayListOf(AndroidPushMessage(
+                        pushMessage = PushMessage(
                                 to = "expo-client-token",
                                 data = Pair("test", "test-data"),
                                 title =  "test-title",
@@ -42,7 +42,7 @@ internal class PushGatewayTest {
                                 expiration =  1000000,
                                 priority = Priority.HIGH,
                                 channelId = "test-channel"
-                        )),
+                        ),
                         onSuccess = assertPushResponse()
                 )
     }
@@ -54,7 +54,7 @@ internal class PushGatewayTest {
 
         PushGateway(expoPushEndpointUrl = "$url/push")
                 .push(
-                        pushMessages = arrayListOf(IOSPushMessage(
+                        pushMessage = PushMessage(
                                 to = "expo-client-token",
                                 data = Pair("test", "test-data"),
                                 title =  "test-title",
@@ -64,7 +64,7 @@ internal class PushGatewayTest {
                                 priority = Priority.HIGH,
                                 badge = 10,
                                 sound = "boing"
-                        )),
+                        ),
                         onSuccess = assertPushResponse()
                 )
     }
@@ -76,7 +76,7 @@ internal class PushGatewayTest {
 
         PushGateway(expoPushEndpointUrl = "$url/push")
                 .push(
-                        pushMessages = arrayListOf(IOSPushMessage(
+                        pushMessage = PushMessage(
                                 to = "expo-client-token",
                                 data = Pair("test", "test-data"),
                                 title =  "test-title",
@@ -86,7 +86,7 @@ internal class PushGatewayTest {
                                 priority = Priority.HIGH,
                                 badge = 10,
                                 sound = "boing"
-                        )),
+                        ),
                         onError = assert400Error()
                 )
     }
@@ -100,7 +100,7 @@ internal class PushGatewayTest {
 
         PushGateway(expoPushEndpointUrl = "$url/push")
                 .push(
-                        pushMessages = arrayListOf(IOSPushMessage(
+                        pushMessage = PushMessage(
                                 to = "expo-client-token",
                                 data = Pair("test", "test-data"),
                                 title =  "test-title",
@@ -110,7 +110,7 @@ internal class PushGatewayTest {
                                 priority = Priority.HIGH,
                                 badge = 10,
                                 sound = "boing"
-                        )),
+                        ),
                         onError = assert500error()
                 )
     }
@@ -180,7 +180,7 @@ internal class PushGatewayTest {
                                 .withBody("Force parse error")
                 )
 
-        assertThrows(Exception::class.java) {
+        assertThrows(PushException::class.java) {
             PushGateway(expoReceiptsEndpointUrl = "$url/receipts")
                     .receipts(listOf("id1", "id2"))
         }
@@ -220,12 +220,12 @@ internal class PushGatewayTest {
             assertNotNull(response)
             with(response) {
                 assertNotNull(data)
-                data.elementAt(0)?.let {
+                data.elementAt(0).let {
                     assertEquals(ResponseStatus.ERROR, it.status)
                     assertEquals("\"ExponentPushToken[xxxxxxxxxxxxxxxxxxxxxx]\" is not a registered push notification recipient", it.message)
                     assertEquals(ErrorDetail.DEVICE_NOT_REGISTRED, it.details?.error)
                 }
-                data.elementAt(1)?.let {
+                data.elementAt(1).let {
                     assertEquals(ResponseStatus.OK, it.status)
                     assertEquals("XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX", it.id)
                 }
@@ -233,7 +233,7 @@ internal class PushGatewayTest {
         }
     }
 
-    fun readFile(path: String): String = this.javaClass::class.java.getResource(path).readText()
+    private fun readFile(path: String): String = this.javaClass::class.java.getResource(path).readText()
 
     private fun preparePushEndpoint() {
         mockServer.`when`(
