@@ -26,7 +26,7 @@ data class PushMessage(
         /**
          * The message to display in the notification
          */
-        val body: String?,
+        val body: String? = null,
 
         /**
          * Time to Live: the number of seconds for which the message may be kept
@@ -37,14 +37,14 @@ data class PushMessage(
          *
          * This field takes precedence over `expiration` when both are specified.
          */
-        val ttl: Long?,
+        val ttl: Long? = null,
 
         /**
          * A timestamp since the UNIX epoch specifying when the message expires. This
          * has the same effect as the `ttl` field and is just an absolute timestamp
          * instead of a relative time.
          */
-        val expiration: Long?,
+        val expiration: Long? = null,
 
         /**
          * The delivery priority of the message. Specify "default" or omit this field
@@ -62,7 +62,7 @@ data class PushMessage(
          * messages are sent immediately. Normal priority corresponds to APNs priority
          * level 5 and high priority to 10.
          */
-        val priority: Priority,
+        val priority: Priority = Priority.DEFAULT,
 
         // Android only
 
