@@ -201,17 +201,17 @@ internal class PushGatewayTest {
                                 .withBody("This is unknown status and payload")
                 )
 
-            PushGateway(expoReceiptsEndpointUrl = "$url/receipts")
-                    .receipts(
-                            listOf("id1", "id2"),
-                            onError = {
-                                assertEquals(ResponseStatus.ERROR, it.status)
-                                with(it.errors.first()){
-                                    assertEquals("UNKNOWN", code)
-                                    assertEquals("This is unknown status and payload", message)
-                                }
+        PushGateway(expoReceiptsEndpointUrl = "$url/receipts")
+                .receipts(
+                        listOf("id1", "id2"),
+                        onError = {
+                            assertEquals(ResponseStatus.ERROR, it.status)
+                            with(it.errors.first()){
+                                assertEquals("UNKNOWN", code)
+                                assertEquals("This is unknown status and payload", message)
                             }
-                    )
+                        }
+                )
     }
 
     private fun assertPushResponse(): (PushResponse) -> Unit {
