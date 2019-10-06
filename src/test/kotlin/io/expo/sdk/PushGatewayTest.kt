@@ -33,7 +33,7 @@ internal class PushGatewayTest {
 
         PushGateway(expoPushEndpointUrl = "$url/push")
                 .push(
-                        pushMessages = arrayListOf(AndroidPushMessage(
+                        pushMessages = arrayListOf(PushMessage(
                                 to = "expo-client-token",
                                 data = Pair("test", "test-data"),
                                 title =  "test-title",
@@ -54,7 +54,7 @@ internal class PushGatewayTest {
 
         PushGateway(expoPushEndpointUrl = "$url/push")
                 .push(
-                        pushMessages = arrayListOf(IOSPushMessage(
+                        pushMessages = arrayListOf(PushMessage(
                                 to = "expo-client-token",
                                 data = Pair("test", "test-data"),
                                 title =  "test-title",
@@ -76,7 +76,7 @@ internal class PushGatewayTest {
 
         PushGateway(expoPushEndpointUrl = "$url/push")
                 .push(
-                        pushMessages = arrayListOf(IOSPushMessage(
+                        pushMessages = arrayListOf(PushMessage(
                                 to = "expo-client-token",
                                 data = Pair("test", "test-data"),
                                 title =  "test-title",
@@ -100,7 +100,7 @@ internal class PushGatewayTest {
 
         PushGateway(expoPushEndpointUrl = "$url/push")
                 .push(
-                        pushMessages = arrayListOf(IOSPushMessage(
+                        pushMessages = arrayListOf(PushMessage(
                                 to = "expo-client-token",
                                 data = Pair("test", "test-data"),
                                 title =  "test-title",
@@ -220,12 +220,12 @@ internal class PushGatewayTest {
             assertNotNull(response)
             with(response) {
                 assertNotNull(data)
-                data.elementAt(0)?.let {
+                data.elementAt(0).let {
                     assertEquals(ResponseStatus.ERROR, it.status)
                     assertEquals("\"ExponentPushToken[xxxxxxxxxxxxxxxxxxxxxx]\" is not a registered push notification recipient", it.message)
                     assertEquals(ErrorDetail.DEVICE_NOT_REGISTRED, it.details?.error)
                 }
-                data.elementAt(1)?.let {
+                data.elementAt(1).let {
                     assertEquals(ResponseStatus.OK, it.status)
                     assertEquals("XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX", it.id)
                 }

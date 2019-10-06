@@ -1,17 +1,17 @@
 package io.expo.sdk
 
-import io.expo.sdk.model.AndroidPushMessage
 import io.expo.sdk.model.Priority
+import io.expo.sdk.model.PushMessage
 
 class TestDrive {
 
     @org.junit.jupiter.api.Test
-    fun testAndroid(){
+    fun `test publishing a message to exponent channel using android settings`(){
 
         val gateway = PushGateway()
 
         gateway.push(
-                pushMessages = arrayListOf(AndroidPushMessage(
+                pushMessages = arrayListOf(PushMessage(
                         to = "ExponentPushToken[xxxxxxxxxxxxxxx]",
                         data = Pair("test", "test-data"),
                         title =  "test-title",
