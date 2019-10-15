@@ -12,7 +12,7 @@ class TestDrive {
 
         gateway.push(
                 pushMessages = arrayListOf(PushMessage(
-                        to = "ExponentPushToken[xxxxxxxxxxxxxxx]",
+                        to = listOf("ExponentPushToken[xxxxxxxxxxxxxxx]"),
                         data = Pair("test", "test-data"),
                         title =  "test-title",
                         body =  "The body of the message",

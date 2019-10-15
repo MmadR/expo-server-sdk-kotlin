@@ -34,7 +34,7 @@ internal class PushGatewayTest {
         PushGateway(expoPushEndpointUrl = "$url/push")
                 .push(
                         pushMessages = arrayListOf(PushMessage(
-                                to = "expo-client-token",
+                                to = listOf("expo-client-token"),
                                 data = Pair("test", "test-data"),
                                 title =  "test-title",
                                 body =  "The body of the message",
@@ -55,7 +55,7 @@ internal class PushGatewayTest {
         PushGateway(expoPushEndpointUrl = "$url/push")
                 .push(
                         pushMessages = arrayListOf(PushMessage(
-                                to = "expo-client-token",
+                                to = listOf("expo-client-token"),
                                 data = Pair("test", "test-data"),
                                 title =  "test-title",
                                 body =  "The body of the message",
@@ -77,7 +77,7 @@ internal class PushGatewayTest {
         PushGateway(expoPushEndpointUrl = "$url/push")
                 .push(
                         pushMessages = arrayListOf(PushMessage(
-                                to = "expo-client-token",
+                                to = listOf("expo-client-token"),
                                 data = Pair("test", "test-data"),
                                 title =  "test-title",
                                 body =  "The body of the message",
@@ -101,7 +101,7 @@ internal class PushGatewayTest {
         PushGateway(expoPushEndpointUrl = "$url/push")
                 .push(
                         pushMessages = arrayListOf(PushMessage(
-                                to = "expo-client-token",
+                                to = listOf("expo-client-token"),
                                 data = Pair("test", "test-data"),
                                 title =  "test-title",
                                 body =  "The body of the message",

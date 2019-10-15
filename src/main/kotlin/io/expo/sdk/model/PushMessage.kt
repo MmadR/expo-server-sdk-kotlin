@@ -7,7 +7,7 @@ data class PushMessage(
         /**
          * An Expo push token specifying the recipient of this message.
          */
-        val to: String,
+        val to: Collection<String>      ,
 
         /**
          * A JSON object delivered to your app. It may be up to about 4KiB; the total
@@ -38,6 +38,13 @@ data class PushMessage(
          * This field takes precedence over `expiration` when both are specified.
          */
         val ttl: Long? = null,
+
+        /**
+         * (Web only)
+         * Remote url of a custom icon that replaces the default notification icon.
+         * This value overrides `notification.icon` in `app.json`.
+         */
+        val icon: String? = null,
 
         /**
          * A timestamp since the UNIX epoch specifying when the message expires. This
@@ -96,5 +103,25 @@ data class PushMessage(
          * Number to display in the badge on the app icon. Specify zero to clear the
          * badge.
          */
-        val badge: Int? = null
+        val badge: Int? = null,
+
+        /**
+         * The subtitle to display in the notification below the title
+         */
+        val subtitle: String? = null,
+
+        /**
+         * ID of the Notification Category through which to display this notification.
+         *
+         * To send a notification with category to the Expo client, prefix the string
+         * with the experience ID (`@user/experienceId:yourCategoryId`). For standalone/ejected
+         * applications, use plain `yourCategoryId`.
+         */
+        val category: String? = null,
+
+        /**
+         * Displays the notification when the app is foreground.
+         * Defaults to `false`.
+         */
+        val displayInForeground: Boolean? = false
 )
