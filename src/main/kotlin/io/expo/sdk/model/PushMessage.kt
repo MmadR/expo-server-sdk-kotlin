@@ -7,7 +7,7 @@ data class PushMessage(
         /**
          * An Expo push token specifying the recipient of this message.
          */
-        val to: String,
+        val to: Collection<String>      ,
 
         /**
          * A JSON object delivered to your app. It may be up to about 4KiB; the total
@@ -26,7 +26,7 @@ data class PushMessage(
         /**
          * The message to display in the notification
          */
-        val body: String?,
+        val body: String? = null,
 
         /**
          * Time to Live: the number of seconds for which the message may be kept
@@ -37,14 +37,21 @@ data class PushMessage(
          *
          * This field takes precedence over `expiration` when both are specified.
          */
-        val ttl: Long?,
+        val ttl: Long? = null,
+
+        /**
+         * (Web only)
+         * Remote url of a custom icon that replaces the default notification icon.
+         * This value overrides `notification.icon` in `app.json`.
+         */
+        val icon: String? = null,
 
         /**
          * A timestamp since the UNIX epoch specifying when the message expires. This
          * has the same effect as the `ttl` field and is just an absolute timestamp
          * instead of a relative time.
          */
-        val expiration: Long?,
+        val expiration: Long? = null,
 
         /**
          * The delivery priority of the message. Specify "default" or omit this field
@@ -62,7 +69,7 @@ data class PushMessage(
          * messages are sent immediately. Normal priority corresponds to APNs priority
          * level 5 and high priority to 10.
          */
-        val priority: Priority,
+        val priority: Priority = Priority.DEFAULT,
 
         // Android only
 
@@ -96,5 +103,25 @@ data class PushMessage(
          * Number to display in the badge on the app icon. Specify zero to clear the
          * badge.
          */
-        val badge: Int? = null
+        val badge: Int? = null,
+
+        /**
+         * The subtitle to display in the notification below the title
+         */
+        val subtitle: String? = null,
+
+        /**
+         * ID of the Notification Category through which to display this notification.
+         *
+         * To send a notification with category to the Expo client, prefix the string
+         * with the experience ID (`@user/experienceId:yourCategoryId`). For standalone/ejected
+         * applications, use plain `yourCategoryId`.
+         */
+        val category: String? = null,
+
+        /**
+         * Displays the notification when the app is foreground.
+         * Defaults to `false`.
+         */
+        val displayInForeground: Boolean? = false
 )
